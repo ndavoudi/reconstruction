@@ -8,6 +8,9 @@ from keras.preprocessing import sequence
 from matplotlib import pyplot as plt
 
 from keras.callbacks import EarlyStopping
+
+
+
 parser = argparse.ArgumentParser()
 
 #parser.add_argument("--mode", default="infer")
@@ -67,19 +70,25 @@ def main():
 
 
     model = unet()
-    '''
+
     for layer in model.layers:
         print(layer.output_shape)
-    '''
+
+    model.load_weights('unet_membrane.hdf5') # load trained model 
 
 
     #callbacks = [K.EarlyStopping(monitor='val_loss', min_delta=1e-2,patience=2,verbose=1)]
+    #es = EarlyStopping(monitor='val_mse', mode='min', verbose=1, patience=10)
+
 
 
     model_checkpoint = ModelCheckpoint('unet_membrane.hdf5', monitor='loss',save_best_only=True) # early stopping
-    es = EarlyStopping(monitor='val_ssim_loss', mode='min', verbose=1, patience=10)
-    #history = model.fit(train_input, train_target, batch_size = 20, epochs=100,verbose=2, callbacks=[model_checkpoint],  validation_data=(val_input, val_target))
-    history = model.fit(train_input, train_target, batch_size = 20, epochs=50,verbose=2, callbacks=[es],  validation_data=(val_input, val_target))
+    history = model.fit(train_input, train_target, batch_size = 4, epochs=2,verbose=2, callbacks=[model_checkpoint],  validation_data=(val_input, val_target))
+    #history = model.fit(train_input, train_target, batch_size = 5, epochs=15,verbose=2, callbacks=[es],  validation_data=(val_input, val_target))
+
+
+    #model.save_weights('./checkpoints/my_checkpoint')
+
 
     plt.plot(history.history['mse'])
     plt.plot(history.history['val_mse'])
@@ -108,10 +117,6 @@ def main():
     K.clear_session()
     gc.collect()
     '''
-
-
-
-
 
 
 

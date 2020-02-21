@@ -31,9 +31,9 @@ model = unet()
 
 model.load_weights("unet_membrane.hdf5")
 #results = model.evaluate(test_input,test_target, batch_size=1)
-results = model.predict(test_input, batch_size = 50)
+results = model.predict(test_input, batch_size = 1)
 
 #sio.savemat(output_folder  + '/input_test.mat', {"input_test" : all_input_test})
 #print('predictions shape:', results.shape)
 
-sio.savemat('result/pred_test2.mat', {"pred_test" : results})
+sio.savemat('result/pred_test.mat', {"pred_test" : results})
